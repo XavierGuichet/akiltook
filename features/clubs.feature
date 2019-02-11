@@ -12,7 +12,7 @@ Feature: Manage club
    # And There is a game with id "1"
    When I add "Content-Type" header equal to "application/ld+json"
    And I add "Accept" header equal to "application/ld+json"
-   And I send a "POST" request to "/api/clubs" with body:
+   And I send a "POST" request to "/clubs" with body:
    """
    {
      "Name": "AEPR"
@@ -24,8 +24,8 @@ Feature: Manage club
    And the JSON should be equal to:
    """
    {
-       "@context": "/api/contexts/Club",
-       "@id": "/api/clubs/1",
+       "@context": "/contexts/Club",
+       "@id": "/clubs/1",
        "@type": "Club",
        "id": 1,
        "Name": "AEPR",
@@ -37,5 +37,5 @@ Feature: Manage club
  Scenario: Delete a Club
    When I add "Content-Type" header equal to "application/ld+json"
    When I add "Accept" header equal to "application/ld+json"
-   And I send a "DELETE" request to "/api/clubs/1"
+   And I send a "DELETE" request to "/clubs/1"
    Then the response status code should be 204

@@ -20,7 +20,7 @@ class Took
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Game", inversedBy="Title")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Game", inversedBy="tooks")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank()
      */
@@ -36,6 +36,17 @@ class Took
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $Description;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Account")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $CreatedBy;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $DoneBy;
 
     public function getId(): ?int
     {
@@ -74,6 +85,30 @@ class Took
     public function setDescription(?string $Description): self
     {
         $this->Description = $Description;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?Account
+    {
+        return $this->CreatedBy;
+    }
+
+    public function setCreatedBy(?Account $CreatedBy): self
+    {
+        $this->CreatedBy = $CreatedBy;
+
+        return $this;
+    }
+
+    public function getDoneBy(): ?string
+    {
+        return $this->DoneBy;
+    }
+
+    public function setDoneBy(?string $DoneBy): self
+    {
+        $this->DoneBy = $DoneBy;
 
         return $this;
     }

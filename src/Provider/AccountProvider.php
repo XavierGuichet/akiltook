@@ -11,22 +11,24 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AccountProvider implements UserProviderInterface
 {
     private $em;
-    public function __construct(EntityManager $em) {
+    public function __construct(EntityManagerInterface $em) {
         $this->em = $em;
     }
 
-    public function loadUserByUsername($email)
+    public function loadUserByUsername($emailOrUsername)
     {
-        $userData = $this->em->getRepository(Account::class)->findOneByEmail($email);
+        $userData = $this->em->getRepository(Account::class)->loadUserByEmailOrUsername($emailOrUsername);
         if ($userData !== null) {
             return $userData;
         }
-        throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $email));
+        throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $emailOrUsername));
     }
+    
     public function refreshUser(UserInterface $user)
     {
 

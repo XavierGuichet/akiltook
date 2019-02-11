@@ -9,10 +9,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+use App\Controller\MyAccount;
 /**
  * Account
  *
  * @ApiResource(
+ *        itemOperations={
+ *            "get",
+ *              "my-account"={
+ *                  "method"="GET",
+ *                  "path"="/me",
+ *                  "controller"=MyAccount::class,
+ *                }
+ *              },
  *     normalizationContext={"groups"={"account", "account:read"}},
  *     denormalizationContext={"groups"={"account", "account:write"}}
  * )
@@ -43,6 +52,7 @@ class Account implements UserInterface
     /**
      * @var string
      *
+     * @Groups({"account:read"})
      * @ORM\Column(type="string", length=255)
      */
     private $roles;
@@ -65,6 +75,7 @@ class Account implements UserInterface
     /**
      * @var string
      *
+     * @Groups({"account"})
      * @ORM\Column(type="string", length=255)
      */
     private $username;
@@ -92,8 +103,7 @@ class Account implements UserInterface
     public function setEmail($email)
     {
         $this->email = $email;
-        $this->setUsername($this->email);
-
+        
         return $this;
     }
 
