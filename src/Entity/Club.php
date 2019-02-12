@@ -30,6 +30,11 @@ class Club
      */
     private $teams;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\MediaObject", cascade={"persist", "remove"})
+     */
+    private $Logo;
+
     public function __construct()
     {
         $this->teams = new ArrayCollection();
@@ -79,6 +84,18 @@ class Club
                 $team->setClub(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLogo(): ?MediaObject
+    {
+        return $this->Logo;
+    }
+
+    public function setLogo(?MediaObject $Logo): self
+    {
+        $this->Logo = $Logo;
 
         return $this;
     }
