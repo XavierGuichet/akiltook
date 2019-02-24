@@ -7,9 +7,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+
 /**
  * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\GameRepository")
+ * @ApiFilter(OrderFilter::class, properties={"id", "startAt"}, arguments={"orderParameterName"="order"})
+ * @ApiFilter(DateFilter::class, properties={"startAt"})
  */
 class Game
 {
