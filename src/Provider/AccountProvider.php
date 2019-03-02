@@ -17,9 +17,15 @@ use Doctrine\ORM\EntityManagerInterface;
 class AccountProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
     private $em;
-    public function __construct(EntityManagerInterface $em, array $properties) {
-      // dump('account provider constructed');
+
+    private $accountRepo;
+
+    private $oauthProperties;
+
+    public function __construct(EntityManagerInterface $em, array $oauthProperties) {
         $this->em = $em;
+        $this->accountRepo = $this->em->getRepository(Account::class);
+        $this->oauthProperties = $oauthProperties;
     }
 
     /**
@@ -28,29 +34,12 @@ class AccountProvider implements UserProviderInterface, OAuthAwareUserProviderIn
     // Add a Oauth login method/id to current user
     public function connect(UserInterface $user, UserResponseInterface $response)
     {
-        // dump('by connect');
-        // get property from provider configuration by provider name
-        // , it will return `facebook_id` in that case (see service definition below)
-        $property = $this->getProperty($response);
-        $username = $response->getUsername(); // get the unique user identifier
-
-        //we "disconnect" previously connected users
-        $existingUser = $this->userManager->findUserBy(array($property => $username));
-        if (null !== $existingUser) {
-            // set current user id and token to null for disconnect
-            // ...
-
-            $this->userManager->updateUser($existingUser);
-        }
-        // we connect current user, set current user id and token
-        // ...
-        $this->userManager->updateUser($user);
+        throw new \Exception("Not implemented", 1);
     }
 
     public function loadUserByUsername($emailOrUsername)
     {
-        // dump('by UserName');
-        $userData = $this->em->getRepository(Account::class)->loadUserByEmailOrUsername($emailOrUsername);
+        $userData = $this->accountRepo->loadUserByEmailOrUsername($emailOrUsername);
         if ($userData !== null) {
             return $userData;
         }
@@ -69,85 +58,76 @@ class AccountProvider implements UserProviderInterface, OAuthAwareUserProviderIn
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
-        $username = $response->getUsername();
-        $property = $this->getProperty($response);
+        $property = $this->getOAuthProperty($response);
+        $oauthId = $response->getUsername();
 
-        $user = $this->userManager->findUserBy(array($this->getProperty($response) => $username));
+        if (null === $oauthId) {
+          throw new \Exception("No OAuth ID", 1);
+        }
+
+        $account = $this->accountRepo->loadUserByOAuth($property, $oauthId);
+
+        if ($account) {
+          return $account;
+        }
 
         $email = $response->getEmail();
-
         // check if we already have this user
-        $existing = $this->userManager->findUserBy(array('email' => $email));
-        if ($existing instanceof User) {
+        $account = $this->accountRepo->findBy(array('email' => $email));
+        if ($account instanceof Account) {
             // in case of Facebook login, update the facebook_id
             if ($property == "facebookId") {
-                $existing->setFacebookId($username);
+                $existingAccount->setFacebookId($oauthId);
             }
             // in case of Google login, update the google_id
             if ($property == "googleId") {
-                $existing->setGoogleId($username);
+                $existingAccount->setGoogleId($oauthId);
             }
-            $this->userManager->updateUser($existing);
+            $this->em->persist($account);
+            $this->em->flush();
 
-            return $existing;
+            return $account;
         }
 
-        // if we don't know the user, create it
-        if (null === $user || null === $username) {
-            /** @var User $user */
-            $user = $this->userManager->createUser();
-            $nick = "johndoe"; // to be changed
+        // We don't know the user, create it
+        $account = new Account();
+        $username = $response->getRealName();
+        $account->setUsername($username);
+        $account->setEmail($response->getEmail());
+        $account->setPassword(sha1(uniqid()));
+        $account->addRoles('ROLE_USER');
 
-            $user->setLastLogin(new \DateTime());
-            $user->setEnabled(true);
-
-            $user->setUsername($nick);
-            $user->setUsernameCanonical($nick);
-            $user->setPassword(sha1(uniqid()));
-            $user->addRole('ROLE_USER');
-
-            if ($property == "facebookId") {
-                $user->setFacebookId($username);
-            }
-            if ($property == "googleId") {
-                $user->setGoogleId($username);
-            }
+        if ($property == "facebookId") {
+            $account->setFacebookId($oauthId);
         }
+        if ($property == "googleId") {
+            $account->setGoogleId($oauthId);
+        }
+        $this->em->persist($account);
+        $this->em->flush();
 
-        $user->setEmail($response->getEmail());
-        $user->setFirstname($response->getFirstName());
-        $user->setLastname($response->getLastName());
-
-        $this->userManager->updateUser($user);
-
-        return $user;
+        return $account;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the property for the response.
+     *
+     * @param UserResponseInterface $response
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
      */
-    // public function loadUserByOAuthUserResponse(UserResponseInterface $response)
-    // {
-    //     $userEmail = $response->getEmail();
-    //     $user = $this->userManager->findUserByEmail($userEmail);
-    //
-    //     // if null just create new user and set it properties
-    //     if (null === $user) {
-    //         $username = $response->getRealName();
-    //         $user = new User();
-    //         $user->setUsername($username);
-    //
-    //         // ... save user to database
-    //
-    //         return $user;
-    //     }
-    //     // else update access token of existing user
-    //     $serviceName = $response->getResourceOwner()->getName();
-    //     $setter = 'set' . ucfirst($serviceName) . 'AccessToken';
-    //     $user->$setter($response->getAccessToken());//update access token
-    //
-    //     return $user;
-    // }
+    protected function getOAuthProperty(UserResponseInterface $response)
+    {
+        $resourceOwnerName = $response->getResourceOwner()->getName();
+
+        if (!isset($this->oauthProperties[$resourceOwnerName])) {
+            throw new \RuntimeException(sprintf("No property defined for entity for resource owner '%s'.", $resourceOwnerName));
+        }
+
+        return $this->oauthProperties[$resourceOwnerName];
+    }
 
     public function refreshUser(UserInterface $user)
     {

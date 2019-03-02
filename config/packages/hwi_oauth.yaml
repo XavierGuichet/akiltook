@@ -6,7 +6,8 @@ hwi_oauth:
     # https://github.com/hwi/HWIOAuthBundle/blob/master/Resources/doc/2-configuring_resource_owners.md
     resource_owners:
         facebook:
-            type:                facebook
+            type: oauth2
+            class: App\OAuth\ResourceOwner\CustomFacebookResourceOwner
             client_id:           '%env(FB_ID)%'
             client_secret:       '%env(FB_SECRET)%'
             scope:               "email"
