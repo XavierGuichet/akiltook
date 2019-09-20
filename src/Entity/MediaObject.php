@@ -33,7 +33,7 @@ class MediaObject
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private $Id;
 
     /**
      * @var File|null
@@ -47,9 +47,9 @@ class MediaObject
      * @ApiProperty(iri="http://schema.org/contentUrl")
      */
     public $contentUrl;
-    
+
     public function getId(): ?int
     {
-        return $this->id;
+        return $this->Id;
     }
 }

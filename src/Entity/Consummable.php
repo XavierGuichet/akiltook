@@ -10,21 +10,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\TookRepository")
  */
-class Took
+class Consummable
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Game", inversedBy="tooks")
-     * @ORM\JoinColumn(nullable=false)
-     * @Assert\NotBlank()
-     */
-    private $Event;
+    private $Id;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -51,18 +44,6 @@ class Took
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getEvent(): ?Game
-    {
-        return $this->Event;
-    }
-
-    public function setEvent(?Game $Event): self
-    {
-        $this->Event = $Event;
-
-        return $this;
     }
 
     public function getTitle(): ?string

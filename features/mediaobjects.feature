@@ -21,13 +21,17 @@ Feature: Upload Media Object
    Then the response status code should be 201
    And the response should be in JSON
    And the header "Content-Type" should be equal to "application/ld+json; charset=utf-8"
-   And the JSON should be equal to:
+   And the JSON should be valid according to this schema:
    """
    {
        "@context": "/contexts/MediaObject",
        "@id": "/media_objects/1",
-       "@type": "MediaObject",
-       "id": 1,
-       "contentUrl": "<filename>",
+       "@type": "http://schema.org/MediaObject",
+       "file": null,
+       "contentUrl": {
+           "type": "string",
+           "required":true
+       },
+       "Id": 1
    }
    """

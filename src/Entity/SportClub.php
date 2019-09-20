@@ -9,16 +9,16 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource()
- * @ORM\Entity(repositoryClass="App\Repository\ClubRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SportClubRepository")
  */
-class Club
+class SportClub
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private $Id;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -26,9 +26,9 @@ class Club
     private $Name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Team", mappedBy="club", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\SportTeam", mappedBy="SportClub", orphanRemoval=true)
      */
-    private $teams;
+    private $SportsTeams;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\MediaObject", cascade={"persist", "remove"})
@@ -42,7 +42,7 @@ class Club
 
     public function getId(): ?int
     {
-        return $this->id;
+        return $this->Id;
     }
 
     public function getName(): ?string

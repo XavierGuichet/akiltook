@@ -39,11 +39,11 @@ Feature: Manage games
      "tooks": []
    }
    """
-   
+
  @login
  Scenario: Retrieve the games list
    When I add "Accept" header equal to "application/ld+json"
-   And I send a "GET" request to "/games"
+   And I send a "GET" request to "/games?orderstartAt=asc"
    Then the response status code should be 200
    And the response should be in JSON
    And the header "Content-Type" should be equal to "application/ld+json; charset=utf-8"

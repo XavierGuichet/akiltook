@@ -37,23 +37,23 @@ class FeatureContext implements Context
    */
   private $classes;
   /**
-   * @var 
+   * @var
    */
   private $manager;
   /**
-   * @var 
+   * @var
    */
   private $jwtManager;
 
   public function __construct(ManagerRegistry $doctrine, $jwtManager)
-  {    
+  {
       $this->doctrine = $doctrine;
       $this->jwtManager = $jwtManager;
       $this->manager = $doctrine->getManager();
       $this->schemaTool = new SchemaTool($this->manager);
       $this->classes = $this->manager->getMetadataFactory()->getAllMetadata();
   }
-  
+
   /**
    * @BeforeScenario @createSchema
    */
@@ -63,7 +63,7 @@ class FeatureContext implements Context
       $this->doctrine->getManager()->clear();
       $this->schemaTool->createSchema($this->classes);
   }
-  
+
   /**
    * @BeforeScenario @login
    *
@@ -76,13 +76,13 @@ class FeatureContext implements Context
         $user->setUsername('testaccount');
         $user->setPassword('ATestPassword');
         $user->setEmail('test@test.com');
-      
+
         $this->manager->persist($user);
         $this->manager->flush();
       }
-      
+
       $token = $this->jwtManager->create($user);
-      
+
       $this->restContext = $scope->getEnvironment()->getContext(RestContext::class);
       $this->restContext->iAddHeaderEqualTo('Authorization', "Bearer $token");
   }
@@ -108,30 +108,30 @@ class FeatureContext implements Context
   public function thereIsAGameWithId($arg1)
   {
     $manager = $this->doctrine->getManager();
-    
+
     $club = new Club();
     $club->setName("AEPR");
     $manager->persist($club);
-    
+
     $team1 = new Team();
     $team1->setName('Feminine A');
     $team1->setClub($club);
     $manager->persist($team1);
-    
+
     $team2 = new Team();
     $team2->setName('Feminine B');
     $team2->setClub($club);
     $manager->persist($team2);
-      
-    
+
+
     $game = new Game();
     $game->setTeam1($team1);
     $game->setTeam2($team2);
     $manager->persist($game);
-    
+
     $manager->flush();
   }
-  
+
   /**
    * @Given There is a club with id :arg1
    */
@@ -139,19 +139,19 @@ class FeatureContext implements Context
   {
       $club = new Club();
       $club->setName("AEPR");
-      
+
       $manager = $this->doctrine->getManager();
       $manager->persist($club);
       $manager->flush();
   }
-  
+
   /**
    * @Given There are :arg1 teams
    */
   public function thereAreTeams($arg1)
   {
       $manager = $this->doctrine->getManager();
-      
+
       $club = new Club();
       $club->setName("AEPR");
       $manager->persist($club);
@@ -163,7 +163,7 @@ class FeatureContext implements Context
       }
       $manager->flush();
   }
-  
+
   /**
    * @Given It is pending
    */

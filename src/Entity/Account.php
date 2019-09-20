@@ -36,7 +36,7 @@ class Account implements UserInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private $Id;
 
     /**
      * @var string
@@ -100,7 +100,7 @@ class Account implements UserInterface
      */
     public function getId()
     {
-        return $this->id;
+        return $this->Id;
     }
 
     /**
@@ -113,7 +113,7 @@ class Account implements UserInterface
     public function setEmail($email)
     {
         $this->email = $email;
-        
+
         return $this;
     }
 
