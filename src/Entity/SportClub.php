@@ -62,9 +62,9 @@ class SportClub
     /**
      * @return Collection|SportTeam[]
      */
-    public function getTeams(): Collection
+    public function getSportsTeams(): Collection
     {
-        return $this->teams;
+        return $this->SportsTeams;
     }
 
     public function addSportTeam(SportTeam $SportsTeam): self
