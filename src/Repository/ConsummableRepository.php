@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Took;
+use App\Entity\Consummable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -12,10 +12,10 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method Took[]    findAll()
  * @method Took[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TookRepository extends ServiceEntityRepository
+class ConsummableRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, Took::class);
+        parent::__construct($registry, Consummable::class);
     }
 }

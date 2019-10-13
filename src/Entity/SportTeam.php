@@ -7,9 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use App\Entity\SportClub;
 /**
  * @ApiResource()
- * @ORM\Entity(repositoryClass="App\Repository\TeamRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SportTeamRepository")
  */
 class SportTeam
 {
@@ -26,7 +27,7 @@ class SportTeam
     private $Name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SportClub", inversedBy="SportsTeams")
+     * @ORM\ManyToOne(targetEntity="SportClub", inversedBy="SportsTeams")
      * @ORM\JoinColumn(nullable=false)
      */
     private $SportClub;
@@ -38,7 +39,7 @@ class SportTeam
 
     public function getId(): ?int
     {
-        return $this->id;
+        return $this->Id;
     }
 
     public function getName(): ?string
@@ -49,6 +50,18 @@ class SportTeam
     public function setName(string $Name): self
     {
         $this->Name = $Name;
+
+        return $this;
+    }
+
+    public function getSportClub(): ?SportClub
+    {
+        return $this->SportClub;
+    }
+
+    public function setSportClub(SportClub $SportClub): self
+    {
+        $this->SportClub = $SportClub;
 
         return $this;
     }

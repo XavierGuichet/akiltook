@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Team;
+use App\Entity\SportTeam;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -12,10 +12,10 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method Team[]    findAll()
  * @method Team[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TeamRepository extends ServiceEntityRepository
+class SportTeamRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, Team::class);
+        parent::__construct($registry, SportTeam::class);
     }
 }

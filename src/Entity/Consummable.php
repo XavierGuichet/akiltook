@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource()
- * @ORM\Entity(repositoryClass="App\Repository\TookRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ConsummableRepository")
  */
 class Consummable
 {
@@ -43,7 +43,7 @@ class Consummable
 
     public function getId(): ?int
     {
-        return $this->id;
+        return $this->Id;
     }
 
     public function getTitle(): ?string

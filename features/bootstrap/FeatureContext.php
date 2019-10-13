@@ -16,9 +16,9 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\SchemaTool;
 
 use App\Entity\Account;
-use App\Entity\Club;
-use App\Entity\Game;
-use App\Entity\Team;
+use App\Entity\SportClub;
+use App\Entity\SportEvent;
+use App\Entity\SportTeam;
 /**
  * Defines application features from the specific context.
  */
@@ -109,25 +109,25 @@ class FeatureContext implements Context
   {
     $manager = $this->doctrine->getManager();
 
-    $club = new Club();
+    $club = new SportClub();
     $club->setName("AEPR");
     $manager->persist($club);
 
-    $team1 = new Team();
+    $team1 = new SportTeam();
     $team1->setName('Feminine A');
-    $team1->setClub($club);
+    $team1->setSportClub($club);
     $manager->persist($team1);
 
-    $team2 = new Team();
+    $team2 = new SportTeam();
     $team2->setName('Feminine B');
-    $team2->setClub($club);
+    $team2->setSportClub($club);
     $manager->persist($team2);
 
 
-    $game = new Game();
-    $game->setTeam1($team1);
-    $game->setTeam2($team2);
-    $manager->persist($game);
+    $sportEvent = new SportEvent();
+    $sportEvent->setHomeTeam($team1);
+    $sportEvent->setAwayTeam($team2);
+    $manager->persist($sportEvent);
 
     $manager->flush();
   }
@@ -137,7 +137,7 @@ class FeatureContext implements Context
    */
   public function thereIsAClubWithId($arg1)
   {
-      $club = new Club();
+      $club = new SportClub();
       $club->setName("AEPR");
 
       $manager = $this->doctrine->getManager();
@@ -152,13 +152,13 @@ class FeatureContext implements Context
   {
       $manager = $this->doctrine->getManager();
 
-      $club = new Club();
+      $club = new SportClub();
       $club->setName("AEPR");
       $manager->persist($club);
       for($i = 0;  $i < $arg1; $i++) {
-        $team = new Team();
+        $team = new SportTeam();
         $team->setName('Feminine A');
-        $team->setClub($club);
+        $team->setSportClub($club);
         $manager->persist($team);
       }
       $manager->flush();

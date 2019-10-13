@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace App\Entity\Traits;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,10 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
-
-/**
- */
-abstract class Event
+/*
+ * @ApiFilter(OrderFilter::class, properties={"id", "StartDate"}, arguments={"orderParameterName"="order"})
+ * @ApiFilter(DateFilter::class, properties={"StartDate"})
+*/
+trait TimeBoundTrait
 {
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -25,36 +26,19 @@ abstract class Event
      */
     private $EndDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Model\Event")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $SuperEvent;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Model\Event")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $SubEvent;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $location;
-
     public function __construct()
     {
-        // $this->Title = new ArrayCollection();
+
     }
 
-    public function getStartAt(): ?\DateTimeInterface
+    public function getStartDate(): ?\DateTimeInterface
     {
-        return $this->startAt;
+        return $this->StartDate;
     }
 
-    public function setStartAt(?\DateTimeInterface $startAt): self
+    public function setStartDate(?\DateTimeInterface $StartDate): self
     {
-        $this->startAt = $startAt;
+        $this->StartDate = $StartDate;
 
         return $this;
     }

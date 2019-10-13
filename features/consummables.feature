@@ -12,10 +12,10 @@ Feature: Manage tooks
    Given There is a game with id "1"
    When I add "Content-Type" header equal to "application/ld+json"
    And I add "Accept" header equal to "application/ld+json"
-   And I send a "POST" request to "/tooks" with body:
+   And I send a "POST" request to "/consummables" with body:
    """
    {
-     "Event": "/games/1",
+     "Event": "/sport_events/1",
      "Title": "took",
      "Description": "Ce sera une took sans alcool"
    }
@@ -26,53 +26,51 @@ Feature: Manage tooks
    And the JSON should be equal to:
    """
    {
-     "@context": "/contexts/Took",
-     "@id": "/tooks/1",
-     "@type": "Took",
-     "id": 1,
-     "Event": "/games/1",
-     "Title": "took",
-     "Description": "Ce sera une took sans alcool",
-     "CreatedBy": "/accounts/1",
-     "DoneBy": null
-   }
+        "@context": "/contexts/Consummable",
+        "@id": "/consummables/1",
+        "@type": "Consummable",
+        "Id": 1,
+        "Title": "took",
+        "Description": "Ce sera une took sans alcool",
+        "CreatedBy": "/accounts/1",
+        "DoneBy": null
+    }
    """
-   
+
  @login
  Scenario: Retrieve the tooks list
    When I add "Accept" header equal to "application/ld+json"
-   And I send a "GET" request to "/tooks"
+   And I send a "GET" request to "/consummables"
    Then the response status code should be 200
    And the response should be in JSON
    And the header "Content-Type" should be equal to "application/ld+json; charset=utf-8"
    And the JSON should be equal to:
    """
    {
-     "@context": "/contexts/Took",
-     "@id": "/tooks",
-     "@type": "hydra:Collection",
-     "hydra:member": [
-       {
-         "@id": "/tooks/1",
-         "@type": "Took",
-         "id": 1,
-         "Event": "/games/1",
-         "Title": "took",
-         "Description": "Ce sera une took sans alcool",
-         "CreatedBy": "/accounts/1",
-         "DoneBy": null
-       }
-     ],
-     "hydra:totalItems": 1
+       "@context": "/contexts/Consummable",
+       "@id": "/consummables",
+       "@type": "hydra:Collection",
+       "hydra:member": [
+           {
+               "@id": "/consummables/1",
+               "@type": "Consummable",
+               "Id": 1,
+               "Title": "took",
+               "Description": "Ce sera une took sans alcool",
+               "CreatedBy": "/accounts/1",
+               "DoneBy": null
+           }
+       ],
+       "hydra:totalItems": 1
    }
    """
-   
+
  @login
  Scenario: Throw errors when a post is invalid
-   Given It is pending
+   # Given It is pending
    When I add "Content-Type" header equal to "application/ld+json"
    And I add "Accept" header equal to "application/ld+json"
-   And I send a "POST" request to "/tooks" with body:
+   And I send a "POST" request to "/consummables" with body:
    """
    {
      "Title": "",
@@ -84,29 +82,25 @@ Feature: Manage tooks
    And the header "Content-Type" should be equal to "application/ld+json; charset=utf-8"
    And the JSON should be equal to:
    """
-   {
-     "@context": "/contexts/ConstraintViolationList",
-     "@type": "ConstraintViolationList",
-     "hydra:title": "An error occurred",
-     "hydra:description": "Event: This value should not be blank.\nTitle: This value should not be blank",
-     "violations": [
-       {
-         "propertyPath": "Event",
-         "message": "This value should be an existing event."
-       },
-       {
-         "propertyPath": "Title",
-         "message": "This value should not be blank."
-       }
-     ]
-   }
+  {
+      "@context": "/contexts/ConstraintViolationList",
+      "@type": "ConstraintViolationList",
+      "hydra:title": "An error occurred",
+      "hydra:description": "Title: This value should not be blank.",
+      "violations": [
+          {
+              "propertyPath": "Title",
+              "message": "This value should not be blank."
+          }
+      ]
+  }
    """
-   
+
  @login
  Scenario: Modify a Took
    When I add "Content-Type" header equal to "application/ld+json"
    And I add "Accept" header equal to "application/ld+json"
-   And I send a "PUT" request to "/tooks/1" with body:
+   And I send a "PUT" request to "/consummables/1" with body:
    """
    {
      "Id": 1,
@@ -119,23 +113,22 @@ Feature: Manage tooks
    And the JSON should be equal to:
    """
    {
-     "@context": "/contexts/Took",
-     "@id": "/tooks/1",
-     "@type": "Took",
-     "id": 1,
-     "Event": "/games/1",
-     "Title": "took",
-     "Description": "Je fais une took sans jus de banane",
-     "CreatedBy": "/accounts/1",
-     "DoneBy": null
+       "@context": "/contexts/Consummable",
+       "@id": "/consummables/1",
+       "@type": "Consummable",
+       "Id": 1,
+       "Title": "took",
+       "Description": "Je fais une took sans jus de banane",
+       "CreatedBy": "/accounts/1",
+       "DoneBy": null
    }
    """
-   
+
  # The "@dropSchema" annotation must be added on the last scenario of the feature file to drop the temporary SQLite database
  @dropSchema
  @login
  Scenario: Delete a Took
    When I add "Content-Type" header equal to "application/ld+json"
    When I add "Accept" header equal to "application/ld+json"
-   And I send a "DELETE" request to "/tooks/1"
+   And I send a "DELETE" request to "/consummables/1"
    Then the response status code should be 204

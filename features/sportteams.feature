@@ -11,11 +11,11 @@ Feature: Manage Team
    Given There is a club with id "1"
    When I add "Content-Type" header equal to "application/ld+json"
    And I add "Accept" header equal to "application/ld+json"
-   And I send a "POST" request to "/teams" with body:
+   And I send a "POST" request to "/sport_teams" with body:
    """
    {
      "Name": "Feminine A",
-     "club": "/clubs/1"
+     "SportClub": "/sport_clubs/1"
    }
    """
    Then the response status code should be 201
@@ -24,13 +24,12 @@ Feature: Manage Team
    And the JSON should be equal to:
    """
    {
-       "@context": "/contexts/Team",
-       "@id": "/teams/1",
-       "@type": "Team",
-       "id": 1,
-       "Name": "Feminine A",
-       "games": [],
-       "club": "/clubs/1"
+     "@context": "/contexts/SportTeam",
+     "@id": "/sport_teams/1",
+     "@type": "SportTeam",
+     "Id": 1,
+     "Name": "Feminine A",
+     "SportClub": "/sport_clubs/1"
    }
    """
 
@@ -38,5 +37,5 @@ Feature: Manage Team
  Scenario: Delete a Team
    When I add "Content-Type" header equal to "application/ld+json"
    When I add "Accept" header equal to "application/ld+json"
-   And I send a "DELETE" request to "/teams/1"
+   And I send a "DELETE" request to "/sport_teams/1"
    Then the response status code should be 204

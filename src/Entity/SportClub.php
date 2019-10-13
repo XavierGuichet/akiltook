@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use App\Entity\SportTeam;
+use App\Entity\MediaObject;
 /**
  * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\SportClubRepository")
@@ -58,30 +60,30 @@ class SportClub
     }
 
     /**
-     * @return Collection|Team[]
+     * @return Collection|SportTeam[]
      */
     public function getTeams(): Collection
     {
         return $this->teams;
     }
 
-    public function addTeam(Team $team): self
+    public function addSportTeam(SportTeam $SportsTeam): self
     {
-        if (!$this->teams->contains($team)) {
-            $this->teams[] = $team;
-            $team->setClub($this);
+        if (!$this->SportsTeam->contains($SportsTeam)) {
+            $this->SportsTeam[] = $SportsTeam;
+            $SportsTeam->setClub($this);
         }
 
         return $this;
     }
 
-    public function removeTeam(Team $team): self
+    public function removeSportTeam(SportTeam $SportsTeam): self
     {
-        if ($this->teams->contains($team)) {
-            $this->teams->removeElement($team);
+        if ($this->SportsTeam->contains($SportsTeam)) {
+            $this->SportsTeam->removeElement($SportsTeam);
             // set the owning side to null (unless already changed)
-            if ($team->getClub() === $this) {
-                $team->setClub(null);
+            if ($SportsTeam->getClub() === $this) {
+                $SportsTeam->setClub(null);
             }
         }
 
