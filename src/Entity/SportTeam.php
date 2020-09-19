@@ -27,6 +27,11 @@ class SportTeam
     private $Name;
 
     /**
+     * @ORM\Column(type="boolean", length=255, )
+     */
+    private $Women = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="SportClub", inversedBy="SportsTeams")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -64,5 +69,17 @@ class SportTeam
         $this->SportClub = $SportClub;
 
         return $this;
+    }
+
+    public function setWomen(boolean $women): self
+    {
+      $this->Women = $women;
+
+      return $this;
+    }
+
+    public function getWomen()
+    {
+      return $this->Women;
     }
 }
